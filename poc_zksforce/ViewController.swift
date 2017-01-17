@@ -12,24 +12,20 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        loginToSalesforce()
     }
     
     func loginToSalesforce(){
-        var result : ZKLoginResult?
-        do {
-            let sforce : ZKSforceClient = try ZKSforceClient()
-            
-        }catch{
-            print("error")
-        }
+        var result : ZKLoginResult!
+        let sforce : ZKSforceClient = ZKSforceClient()
+            result = sforce.login("asif@nsiglobal.com", password: "nsiglobal13nSbleH8RIgjUxQp4rHmuLMra5")
+    
+        print("session id is :: \(result.sessionId!)")
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
 }
 
