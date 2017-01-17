@@ -17,10 +17,14 @@ class ViewController: UIViewController {
     
     func loginToSalesforce(){
         var result : ZKLoginResult!
+        var queryResult: ZKQueryResult!
         let sforce : ZKSforceClient = ZKSforceClient()
-            result = sforce.login("asif@nsiglobal.com", password: "nsiglobal13nSbleH8RIgjUxQp4rHmuLMra5")
-    
+        result = sforce.login("asif@nsiglobal.com", password: "nsiglobal13nSbleH8RIgjUxQp4rHmuLMra5")
         print("session id is :: \(result.sessionId!)")
+        queryResult = sforce.query("SELECT NAME FROM CONTACT WHERE EMAIL='Asif.junaid@nsiglobal.com'")
+        for query in queryResult.records(){
+            print(query)
+        }
     }
     
     override func didReceiveMemoryWarning() {
