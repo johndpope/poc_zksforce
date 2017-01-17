@@ -17,19 +17,28 @@ class ViewController: UIViewController {
     
     func loginToSalesforce(){
         var result : ZKLoginResult!
-        var queryResult: ZKQueryResult!
         let sforce : ZKSforceClient = ZKSforceClient()
         result = sforce.login("asif@nsiglobal.com", password: "nsiglobal13nSbleH8RIgjUxQp4rHmuLMra5")
         print("session id is :: \(result.sessionId!)")
-        queryResult = sforce.query("SELECT NAME FROM CONTACT WHERE EMAIL='Asif.junaid@nsiglobal.com'")
-        for query in queryResult.records(){
-            print(query)
-        }
+        queryField(client: sforce,field: "NAME")
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func queryField(client:ZKSforceClient,field:String){
+        var queryResult: ZKQueryResult!
+        queryResult = client.query("SELECT \(field) FROM CONTACT WHERE EMAIL='Asif.junaid@nsiglobal.com'")
+        for query in queryResult.records(){
+            if let dict = query as? ZKSObject{
+                print(dict.fields()["Name"]!)
+            }
+        }
     }
+    func addContact(client:ZKSforceClient,fname:String,lname:String){
+        let contact: ZKSObject = ZKSObject(type: "Contact")
+        contact.setFieldValue(fname as NSObject!, field: "FirstName")
+        contact.setFieldValue(lname as NSObject!, field: "LastName")
+        let result = client.create([contact])
+        
+    }
+    
 }
 
