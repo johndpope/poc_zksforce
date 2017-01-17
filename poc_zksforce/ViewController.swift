@@ -12,7 +12,11 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        loginToSalesforce()
+        
+        DispatchQueue.main.async{
+        self.loginToSalesforce()
+        }
+        
     }
     
     func loginToSalesforce(){
@@ -20,10 +24,14 @@ class ViewController: UIViewController {
         let sforce : ZKSforceClient = ZKSforceClient()
         result = sforce.login("asif@nsiglobal.com", password: "nsiglobal13nSbleH8RIgjUxQp4rHmuLMra5")
         print("session id is :: \(result.sessionId!)")
-        queryField(client: sforce,field: "NAME")
+//        getContact(client: sforce,field: "NAME")
+//        addContact(client: sforce,fname: "Bruce",lname: "Wayne")
+//        getList(client: sforce)
+          getAllContact(client: sforce)
+        
     }
     
-    func queryField(client:ZKSforceClient,field:String){
+    func getContact(client:ZKSforceClient,field:String){
         var queryResult: ZKQueryResult!
         queryResult = client.query("SELECT \(field) FROM CONTACT WHERE EMAIL='Asif.junaid@nsiglobal.com'")
         for query in queryResult.records(){
@@ -32,14 +40,38 @@ class ViewController: UIViewController {
             }
         }
     }
+    func getAllContact(client:ZKSforceClient){
+        var queryResult: ZKQueryResult!
+        queryResult = client.query("SELECT NAME FROM CONTACT")
+        for query in queryResult.records(){
+            if let dict = query as? ZKSObject{
+                print(dict.fields()["Name"]!)
+            }
+        }
+    }
+    
     func addContact(client:ZKSforceClient,fname:String,lname:String){
         let contact: ZKSObject = ZKSObject(type: "Contact")
         contact.setFieldValue(fname as NSObject!, field: "FirstName")
         contact.setFieldValue(lname as NSObject!, field: "LastName")
-        let result = client.create([contact])
+        let result = client.create([contact]) as! [ZKSaveResult]
         let saveResult:ZKSaveResult = result[0]
-        saveResult.success?print("sucess"):print("failed")
+        if saveResult.success {
+            print("success")
+        }else{
+            print("failed")
+        }
     }
+    func getList(client:ZKSforceClient){
+        var queryResult: ZKQueryResult!
+        queryResult = client.query("SELECT Name FROM Files")
+        for query in queryResult.records(){
+            if let dict = query as? ZKSObject{
+                print(dict.fields())
+            }
+        }
+    }
+    
     
 }
 
