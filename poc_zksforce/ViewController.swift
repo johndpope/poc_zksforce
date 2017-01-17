@@ -37,7 +37,8 @@ class ViewController: UIViewController {
         contact.setFieldValue(fname as NSObject!, field: "FirstName")
         contact.setFieldValue(lname as NSObject!, field: "LastName")
         let result = client.create([contact])
-        
+        let saveResult:ZKSaveResult = result[0]
+        saveResult.success?print("sucess"):print("failed")
     }
     
 }
